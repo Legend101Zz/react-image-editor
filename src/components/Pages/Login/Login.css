@@ -1,0 +1,21 @@
+.animated-text-field {
+    position: relative;
+  }
+  
+  .animated-text-field input:focus + label {
+    animation: moveLabel 0.3s ease-out;
+  }
+  
+  @keyframes moveLabel {
+    0% {
+      transform: translateY(0);
+      font-size: 1rem;
+    }
+    100% {
+      transform: translateY(-18px);
+      font-size: 0.8rem;
+    }
+  }
+  
+  /* Adjust the translateY and font-size values as needed */
+  
