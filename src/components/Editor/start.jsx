@@ -28,7 +28,7 @@ function DesignSelection() {
           </div>
           <div className="design-table-row">
             <div className="design-cell design-preview">
-              <img src={userDesign || "logo192.png"} alt="User Design" />
+              <img src={userDesign || "logo_e.png"} alt="User Design" />
               <label>
                 <input
                   type="file"
@@ -56,11 +56,11 @@ function DesignSelection() {
               <div className="category">
                 <Button variant="contained">Shirts</Button>
                 <div className="category-images">
-                  <img src="t_shirt.png" alt="Shirt 1" />
+                  <img src="t_shirt2.jpeg" alt="Shirt 1" />
                   <Button variant="outlined" className="edit-button">
                     Edit
                   </Button>
-                  <img src="t_shirt.png" alt="Shirt 2" />
+                  <img src="t_shirt2.jpeg" alt="Shirt 2" />
                   <Button variant="outlined" className="edit-button">
                     Edit
                   </Button>
