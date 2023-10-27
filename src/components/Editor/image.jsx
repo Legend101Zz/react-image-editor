@@ -14,29 +14,37 @@ function ImageOverlay({
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
 
-      const imageObj = new Image();
-      imageObj.src = mainImage;
+      const mainImageObj = new Image();
+      mainImageObj.src = mainImage;
 
-      const overlayObj = new Image();
-      overlayObj.src = overlayImage;
+      const overlayImageObj = new Image();
+      overlayImageObj.src = overlayImage;
 
-      imageObj.onload = () => {
+      mainImageObj.onload = () => {
+        canvas.width = width || mainImageObj.width;
+        canvas.height = height || mainImageObj.height;
+
+        // Calculate the maximum size for the overlay image
+        const maxSize = Math.min(
+          canvas.width / 2, // Max width is half of the canvas
+          canvas.height / 2 // Max height is half of the canvas
+        );
+
+        // Calculate the position for centering the overlay image
+        const overlayX = (canvas.width - maxSize) / 2;
+        const overlayY = (canvas.height - maxSize) / 2;
+
         // Draw the main image on the canvas
-        canvas.width = width || imageObj.width;
-        canvas.height = height || imageObj.height;
-        context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+        context.drawImage(mainImageObj, 0, 0, canvas.width, canvas.height);
 
-        overlayObj.onload = () => {
-          const [x, y] = overlayPosition.split(",").map(Number);
-          // Draw the overlay image on top of the main image at the specified position
-          context.drawImage(
-            overlayObj,
-            x,
-            y,
-            overlayObj.width,
-            overlayObj.height
-          );
-        };
+        // Draw the overlay image with the calculated size and position
+        context.drawImage(
+          overlayImageObj,
+          overlayX,
+          overlayY,
+          maxSize,
+          maxSize
+        );
       };
     }
   }, [mainImage, overlayImage, overlayPosition, width, height]);

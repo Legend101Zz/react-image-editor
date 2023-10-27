@@ -58,17 +58,21 @@ function DesignSelection() {
                 <Button variant="contained">Shirts</Button>
                 <div className="category-images">
                   <ImageOverlay
-                    mainImage="t_shirt_2.jpeg" // Path to the main shirt image
+                    mainImage="t_shirt2.png" // Path to the main shirt image
                     overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
-                    overlayPosition="0,0" // You can adjust the overlay position as needed
+                    overlayPosition="10,20" // You can adjust the overlay position as needed
+                    width={200}
+                    height={200}
                   />
                   <Button variant="outlined" className="edit-button">
                     Edit
                   </Button>
                   <ImageOverlay
-                    mainImage="t_shirt_2.jpeg" // Path to the main shirt image
+                    mainImage="t_shirt2.png" // Path to the main shirt image
                     overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
-                    overlayPosition="0,0" // You can adjust the overlay position as needed
+                    overlayPosition="10,20" // You can adjust the overlay position as needed
+                    width={200} // Fixed width
+                    height={200}
                   />
                   <Button variant="outlined" className="edit-button">
                     Edit
@@ -81,7 +85,9 @@ function DesignSelection() {
                   <ImageOverlay
                     mainImage="t_hoodie.png" // Path to the main shirt image
                     overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
-                    overlayPosition="0,0" // You can adjust the overlay position as needed
+                    overlayPosition="10,20" // You can adjust the overlay position as needed
+                    width={300} // Fixed width
+                    height={400}
                   />
                   <Button variant="outlined" className="edit-button">
                     Edit
