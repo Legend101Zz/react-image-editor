@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Layouts/Navbar/Navbar.js";
 import { Grid, Paper, Button, Typography } from "@mui/material";
+import ImageOverlay from "./image.jsx";
 import "./DesignSelection.css";
 
 function DesignSelection() {
@@ -56,11 +57,19 @@ function DesignSelection() {
               <div className="category">
                 <Button variant="contained">Shirts</Button>
                 <div className="category-images">
-                  <img src="t_shirt2.jpeg" alt="Shirt 1" />
+                  <ImageOverlay
+                    mainImage="t_shirt_2.jpeg" // Path to the main shirt image
+                    overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
+                    overlayPosition="0,0" // You can adjust the overlay position as needed
+                  />
                   <Button variant="outlined" className="edit-button">
                     Edit
                   </Button>
-                  <img src="t_shirt2.jpeg" alt="Shirt 2" />
+                  <ImageOverlay
+                    mainImage="t_shirt_2.jpeg" // Path to the main shirt image
+                    overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
+                    overlayPosition="0,0" // You can adjust the overlay position as needed
+                  />
                   <Button variant="outlined" className="edit-button">
                     Edit
                   </Button>
@@ -69,11 +78,11 @@ function DesignSelection() {
               <div className="category">
                 <Button variant="contained">Hoodie</Button>
                 <div className="category-images">
-                  <img src="t_hoodie.png" alt="Hoodie 1" />
-                  <Button variant="outlined" className="edit-button">
-                    Edit
-                  </Button>
-                  <img src="t_hoodie.png" alt="Hoodie 2" />
+                  <ImageOverlay
+                    mainImage="t_hoodie.png" // Path to the main shirt image
+                    overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
+                    overlayPosition="0,0" // You can adjust the overlay position as needed
+                  />
                   <Button variant="outlined" className="edit-button">
                     Edit
                   </Button>
