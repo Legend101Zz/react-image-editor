@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../Layouts/Navbar/Navbar.js";
+import { Grid, Paper, Button, Typography } from "@mui/material";
 import "./DesignSelection.css";
 
 function DesignSelection() {
@@ -14,22 +15,46 @@ function DesignSelection() {
           </div>
           <div className="design-table-row">
             <div className="design-cell design-preview">
-              {/* Display the user-added design here */}
               <img src="logo192.png" alt="User Design" />
+              <Button
+                variant="contained"
+                style={{
+                  paddingLeft: "10%",
+                  paddingRight: "10%",
+                  marginLeft: "5%",
+                  marginTop: "20%",
+                  backgroundColor: "#CBB428",
+                  borderRadius: "20px 0 0 20px",
+                }}
+              >
+                Change Design
+              </Button>
             </div>
             <div className="design-cell categories">
               <div className="category">
-                <h1>Shirts</h1>
+                <Button variant="contained">Shirts</Button>
                 <div className="category-images">
-                  <img src="t_shirt.png" alt="Shirt 1" />
-                  <img src="t_shirt.png" alt="Shirt 2" />
+                  <img src="t_shirt2.jpeg" alt="Shirt 1" />
+                  <Button variant="outlined" className="edit-button">
+                    Edit
+                  </Button>
+                  <img src="t_shirt2.jpeg" alt="Shirt 2" />
+                  <Button variant="outlined" className="edit-button">
+                    Edit
+                  </Button>
                 </div>
               </div>
               <div className="category">
-                <h1>Hoodies</h1>
+                <Button variant="contained">Hoodie</Button>
                 <div className="category-images">
-                  <img src="t_shirt.png" alt="Hoodie 1" />
-                  <img src="t_shirt.png" alt="Hoodie 2" />
+                  <img src="t_hoodie.png" alt="Hoodie 1" />
+                  <Button variant="outlined" className="edit-button">
+                    Edit
+                  </Button>
+                  <img src="t_hoodie.png" alt="Hoodie 2" />
+                  <Button variant="outlined" className="edit-button">
+                    Edit
+                  </Button>
                 </div>
               </div>
             </div>
