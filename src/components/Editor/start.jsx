@@ -19,14 +19,18 @@ function DesignSelection() {
             </div>
             <div className="design-cell categories">
               <div className="category">
-                <h2>Shirts</h2>
-                {/* Display a shirt image */}
-                <img src="t_shirt.png" alt="Shirt" />
+                <h1>Shirts</h1>
+                <div className="category-images">
+                  <img src="t_shirt.png" alt="Shirt 1" />
+                  <img src="t_shirt.png" alt="Shirt 2" />
+                </div>
               </div>
               <div className="category">
-                <h2>Hoodies</h2>
-                {/* Display a hoodie image */}
-                <img src="t_shirt.png" alt="Hoodie" />
+                <h1>Hoodies</h1>
+                <div className="category-images">
+                  <img src="t_shirt.png" alt="Hoodie 1" />
+                  <img src="t_shirt.png" alt="Hoodie 2" />
+                </div>
               </div>
             </div>
           </div>

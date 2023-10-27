@@ -39,7 +39,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
 }
 
 .category {
@@ -47,7 +46,13 @@
   text-align: center;
 }
 
-.category img {
-  max-width: 100%;
-  max-height: 150px; /* Adjust the dimensions as needed */
+.category-images {
+  display: flex;
+  justify-content: space-around;
+}
+
+.category-images img {
+  max-width: 45%; /* Adjust the dimensions as needed */
+  max-height: auto;
+  border: 1px solid #ddd;
 }
