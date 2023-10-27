@@ -16,6 +16,7 @@ import EditProfile from "./components/Pages/EditProfile/EditProfile";
 import DesignerSignUp from "./components/Pages/DesignerSignup/DesignerSignup";
 ///===========================EDITOR-HERE=====================
 import Editor from "./components/Editor/index.jsx";
+import DesignSelection from "./components/Editor/start.jsx";
 
 // import Homepage from "./components/Pages/HomePage/Homepage";
 function App() {
@@ -47,6 +48,7 @@ function App() {
         <Route path="/EditProfile" exact element={<EditProfile />} />
         <Route path="/designerSignup" exact element={<DesignerSignUp />} />
         <Route path="/editor" exact element={<Editor />} />
+        <Route path="/editor2" exact element={<DesignSelection />} />
         {/* Add more routes as needed */}
       </Routes>
     </>

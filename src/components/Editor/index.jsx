@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ReactPhotoEditor } from "react-photo-editor";
+import Navbar from "../Layouts/Navbar/Navbar.js";
 import "react-photo-editor/dist/style.css";
 
 function Editor() {
@@ -31,6 +32,7 @@ function Editor() {
 
   return (
     <>
+      <Navbar />
       <input type="file" onChange={(e) => setFileData(e)} multiple={false} />
 
       <button onClick={showModalHandler}>Edit</button>
