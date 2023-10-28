@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import Navbar from "../Layouts/Navbar/Navbar.js";
-import { Grid, Paper, Button, Typography } from "@mui/material";
 import ImageOverlay from "./image.jsx";
+import { Button } from "@mui/material";
+import Editor from "./index.jsx"; // Import the Editor component
 import "./DesignSelection.css";
 
 function DesignSelection() {
   const [userDesign, setUserDesign] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleDesignChange = (e) => {
     // Handle the user's design upload and set it to the state
@@ -18,6 +20,12 @@ function DesignSelection() {
       reader.readAsDataURL(file);
     }
   };
+
+  // Function to set the selected image when the "Edit" button is clicked
+  const handleEditImage = (imageData) => {
+    setSelectedImage(imageData);
+  };
+
   return (
     <>
       <Navbar />
@@ -47,7 +55,7 @@ function DesignSelection() {
                     backgroundColor: "#CBB428",
                     borderRadius: "20px 0 0 20px",
                   }}
-                  component="span" // This makes the button act like a file input button
+                  component="span"
                 >
                   Change Design
                 </Button>
@@ -58,23 +66,31 @@ function DesignSelection() {
                 <Button variant="contained">Shirts</Button>
                 <div className="category-images">
                   <ImageOverlay
-                    mainImage="t_shirt2.png" // Path to the main shirt image
-                    overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
-                    overlayPosition="10,20" // You can adjust the overlay position as needed
+                    mainImage="t_shirt2.png"
+                    overlayImage={userDesign || "logo_e.png"}
+                    overlayPosition="10,20"
                     width={200}
                     height={200}
                   />
-                  <Button variant="outlined" className="edit-button">
+                  <Button
+                    variant="outlined"
+                    className="edit-button"
+                    onClick={() => handleEditImage(selectedImage || userDesign)}
+                  >
                     Edit
                   </Button>
                   <ImageOverlay
-                    mainImage="t_shirt2.png" // Path to the main shirt image
-                    overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
-                    overlayPosition="10,20" // You can adjust the overlay position as needed
-                    width={200} // Fixed width
+                    mainImage="t_shirt2.png"
+                    overlayImage={userDesign || "logo_e.png"}
+                    overlayPosition="10,20"
+                    width={200}
                     height={200}
                   />
-                  <Button variant="outlined" className="edit-button">
+                  <Button
+                    variant="outlined"
+                    className="edit-button"
+                    onClick={() => handleEditImage(selectedImage || userDesign)}
+                  >
                     Edit
                   </Button>
                 </div>
@@ -83,13 +99,17 @@ function DesignSelection() {
                 <Button variant="contained">Hoodie</Button>
                 <div className="category-images">
                   <ImageOverlay
-                    mainImage="t_hoodie.png" // Path to the main shirt image
-                    overlayImage={userDesign || "logo_e.png"} // Use the user's uploaded design as the overlay image
-                    overlayPosition="10,20" // You can adjust the overlay position as needed
-                    width={300} // Fixed width
+                    mainImage="t_hoodie.png"
+                    overlayImage={userDesign || "logo_e.png"}
+                    overlayPosition="10,20"
+                    width={300}
                     height={400}
                   />
-                  <Button variant="outlined" className="edit-button">
+                  <Button
+                    variant="outlined"
+                    className="edit-button"
+                    onClick={() => handleEditImage(selectedImage || userDesign)}
+                  >
                     Edit
                   </Button>
                 </div>
@@ -98,6 +118,8 @@ function DesignSelection() {
           </div>
         </div>
       </div>
+      <Editor image={selectedImage} />{" "}
+      {/* Pass the selected image to the Editor */}
     </>
   );
 }
