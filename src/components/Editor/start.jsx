@@ -93,6 +93,20 @@ function DesignSelection() {
                   >
                     Edit
                   </Button>
+                  <ImageOverlay
+                    mainImage="t_shirt2.png"
+                    overlayImage={userDesign || "logo_e.png"}
+                    overlayPosition="10,20"
+                    width={200}
+                    height={200}
+                  />
+                  <Button
+                    variant="outlined"
+                    className="edit-button"
+                    onClick={() => handleEditImage(selectedImage || userDesign)}
+                  >
+                    Edit
+                  </Button>
                 </div>
               </div>
               <div className="category">

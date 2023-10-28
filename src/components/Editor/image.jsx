@@ -26,8 +26,8 @@ function ImageOverlay({
 
         // Calculate the maximum size for the overlay image
         const maxSize = Math.min(
-          canvas.width / 2, // Max width is half of the canvas
-          canvas.height / 2 // Max height is half of the canvas
+          canvas.width / 3, // Max width is half of the canvas
+          canvas.height / 3 // Max height is half of the canvas
         );
 
         // Calculate the position for centering the overlay image
