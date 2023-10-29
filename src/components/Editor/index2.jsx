@@ -4,7 +4,7 @@ import {
   faRedo,
   faSearchPlus,
   faSearchMinus,
-  faExpand,
+  faSave,
 } from "@fortawesome/free-solid-svg-icons";
 
 function ImageEditor({ mainImageSrc, overlayImageSrc }) {
@@ -33,11 +33,18 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     const width = overlayImage.width * overlayScale;
     const height = overlayImage.height * overlayScale;
 
+    // Reset blending mode and opacity
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 0.8;
+
     ctx.save();
     ctx.translate(x + width / 2, y + height / 2);
     ctx.rotate((rotationAngle * Math.PI) / 180);
     ctx.drawImage(overlayImage, -width / 2, -height / 2, width, height);
     ctx.restore();
+
+    // Reset globalAlpha
+    ctx.globalAlpha = 1;
 
     // Draw bounding box
     ctx.setLineDash([2, 3]);
@@ -149,6 +156,40 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     drawImages();
   };
 
+  const handleSave = () => {
+    const canvas = canvasRef.current;
+    const link = document.createElement("a");
+
+    // Capture the composition of the main image and overlayed image without the bounding box
+    const snapshot = document.createElement("canvas");
+    snapshot.width = canvas.width;
+    snapshot.height = canvas.height;
+    const ctx = snapshot.getContext("2d");
+    ctx.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(
+      overlayPosition.x + (overlayImage.width * overlayScale) / 2,
+      overlayPosition.y + (overlayImage.height * overlayScale) / 2
+    );
+    ctx.rotate((rotationAngle * Math.PI) / 180);
+    ctx.drawImage(
+      overlayImage,
+      (-overlayImage.width * overlayScale) / 2,
+      (-overlayImage.height * overlayScale) / 2,
+      overlayImage.width * overlayScale,
+      overlayImage.height * overlayScale
+    );
+    ctx.restore();
+
+    // Convert the snapshot to a data URL
+    const dataURL = snapshot.toDataURL();
+
+    // Create a download link and trigger the download
+    link.href = dataURL;
+    link.download = "edited_image.png";
+    link.click();
+  };
+
   const scaleButtonSize = 30; // Set the size of scale buttons
 
   const renderScaleButtons = () => {
@@ -237,6 +278,9 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
       />
 
       {renderScaleButtons()}
+      <button onClick={handleSave}>
+        <FontAwesomeIcon icon={faSave} />
+      </button>
     </div>
   );
 }
