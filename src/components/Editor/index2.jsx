@@ -1,144 +1,170 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
-function Editor() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [outputImage, setOutputImage] = useState(null);
-  const [displayedImage, setDisplayedImage] = useState(null);
+function ImageEditor({ mainImageSrc, overlayImageSrc }) {
+  const canvasRef = useRef(null);
+  const [overlayPosition, setOverlayPosition] = useState({ x: 100, y: 100 });
+  const [overlayScale, setOverlayScale] = useState(1);
+  const [rotationAngle, setRotationAngle] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeHandle, setResizeHandle] = useState(null);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0 });
+  const [mainImage, setMainImage] = useState(new Image());
+  const [overlayImage, setOverlayImage] = useState(new Image());
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    setOutputImage(null);
-    setDisplayedImage(URL.createObjectURL(file));
-  };
+  const drawImages = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
 
-  const handleUpload = () => {
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target.result;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
+    // Draw the main image
+    ctx.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
 
-          canvas.width = img.width;
-          canvas.height = img.height;
+    const { x, y } = overlayPosition;
+    const width = overlayImage.width * overlayScale;
+    const height = overlayImage.height * overlayScale;
 
-          ctx.drawImage(img, 0, 0, img.width, img.height);
+    ctx.save();
+    ctx.translate(x + width / 2, y + height / 2);
+    ctx.rotate((rotationAngle * Math.PI) / 180);
+    ctx.drawImage(overlayImage, -width / 2, -height / 2, width, height);
+    ctx.restore();
+  }, [mainImage, overlayImage, overlayPosition, overlayScale, rotationAngle]);
 
-          // Simple background removal: replace white and light gray with transparency
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const pixels = imageData.data;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
 
-          for (let i = 0; i < pixels.length; i += 4) {
-            // Replace white and light gray backgrounds with transparency
-            if (
-              (pixels[i] >= 220 &&
-                pixels[i + 1] >= 220 &&
-                pixels[i + 2] >= 220) ||
-              (pixels[i] >= 200 && pixels[i + 1] >= 200 && pixels[i + 2] >= 200)
-            ) {
-              pixels[i + 3] = 0; // Set alpha channel to 0 (transparent)
-            }
-          }
+    mainImage.src = mainImageSrc;
+    mainImage.onload = () => {
+      canvas.width = mainImage.width;
+      canvas.height = mainImage.height;
 
-          ctx.putImageData(imageData, 0, 0);
-
-          // Convert the canvas to a data URL
-          const outputDataURL = canvas.toDataURL("image/png");
-
-          setOutputImage(outputDataURL);
-        };
+      overlayImage.src = overlayImageSrc;
+      overlayImage.onload = () => {
+        drawImages();
       };
+    };
+  }, [
+    mainImageSrc,
+    overlayImageSrc,
+    overlayPosition,
+    overlayScale,
+    rotationAngle,
+    drawImages,
+    mainImage,
+    overlayImage,
+  ]);
 
-      reader.readAsDataURL(selectedFile);
+  const handleMouseDown = (e) => {
+    const { offsetX, offsetY } = e.nativeEvent;
 
-      setDisplayedImage(outputImage);
+    if (
+      offsetX >= overlayPosition.x &&
+      offsetX <= overlayPosition.x + overlayImageSrc.width * overlayScale &&
+      offsetY >= overlayPosition.y &&
+      offsetY <= overlayPosition.y + overlayImageSrc.height * overlayScale
+    ) {
+      // Clicked inside the overlayed image, enable dragging
+      setIsDragging(true);
+      setDragStart({ x: e.clientX, y: e.clientY });
+    } else {
+      // Clicked outside the overlayed image, enable resizing
+      setIsResizing(true);
+      setResizeStart({ x: e.clientX, y: e.clientY });
+      // Determine the resize handle (e.g., top-left, top-right, bottom-left, bottom-right)
+      // You can add logic to set the `resizeHandle` state based on the click position
+      setResizeHandle("bottom-right");
     }
   };
 
-  const handleSubmit = () => {
-    if (displayedImage) {
-      console.log("SENT-REQ");
-      // Send the displayed image (which can be the selected image or the background-removed image) to the server.
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      const dx = e.clientX - dragStart.x;
+      const dy = e.clientY - dragStart.y;
 
-      // Create a FormData object to send the image file
-      const formData = new FormData();
-      formData.append("image", displayedImage);
+      setOverlayPosition({
+        x: overlayPosition.x + dx,
+        y: overlayPosition.y + dy,
+      });
 
-      // Make a POST request to the server endpoint to save the image
-      fetch("server_api_endpoint_here", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log("Image saved successfully.");
-          } else {
-            console.error("Error saving image.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error saving image:", error);
-        });
+      setDragStart({ x: e.clientX, y: e.clientY });
+      drawImages(
+        mainImageSrc,
+        overlayImageSrc,
+        overlayPosition,
+        overlayScale,
+        rotationAngle
+      );
+    } else if (isResizing) {
+      const dx = e.clientX - resizeStart.x;
+      const dy = e.clientY - resizeStart.y;
+
+      // Implement resizing logic based on the `resizeHandle`
+      if (resizeHandle === "bottom-right") {
+        const newScale = overlayScale + (dx + dy) * 0.01;
+        if (newScale > 0.1) {
+          setOverlayScale(newScale);
+        }
+      }
+
+      setResizeStart({ x: e.clientX, y: e.clientY });
+      drawImages(
+        mainImageSrc,
+        overlayImageSrc,
+        overlayPosition,
+        overlayScale,
+        rotationAngle
+      );
     }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsResizing(false);
+  };
+
+  const handleRotateLeft = () => {
+    // Rotate the overlay image left (counter-clockwise)
+    setRotationAngle(rotationAngle - 90);
+    drawImages(
+      mainImageSrc,
+      overlayImageSrc,
+      overlayPosition,
+      overlayScale,
+      rotationAngle
+    );
+  };
+
+  const handleRotateRight = () => {
+    // Rotate the overlay image right (clockwise)
+    setRotationAngle(rotationAngle + 90);
+    drawImages(
+      mainImageSrc,
+      overlayImageSrc,
+      overlayPosition,
+      overlayScale,
+      rotationAngle
+    );
   };
 
   return (
-    <div className="editor-container">
-      <h1>
-        Please remove the background from your design. Try removing the
-        background remover here, if the desired output is not given, try here{" "}
-        <a
-          href="https://www.remove.bg/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Remove.bg
-        </a>
-        .
-      </h1>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-      {displayedImage && ( // Display the visible image
-        <div className="image-preview-container">
-          <p>Image:</p>
-          <div
-            style={{
-              width: "300px",
-              height: "300px",
-              overflow: "hidden",
-            }}
-          >
-            <img
-              src={displayedImage}
-              alt="Preview"
-              className="image-preview"
-              style={{ width: "100%", height: "100%" }} // Set fixed width and height
-            />
-          </div>
-        </div>
-      )}
-      <button className="upload-button" onClick={handleUpload}>
-        Remove Background
-      </button>
-
-      {outputImage && (
-        <div className="output-container">
-          <img
-            src={outputImage}
-            alt="Background Removed"
-            className="output-image"
-          />
-        </div>
-      )}
-
-      <button className="submit-button" onClick={handleSubmit}>
-        Submit
-      </button>
+    <div>
+      <canvas
+        ref={canvasRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        style={{
+          cursor: isDragging ? "grabbing" : isResizing ? "se-resize" : "grab",
+        }}
+      />
+      <button onClick={handleRotateLeft}>Rotate Left</button>
+      <button onClick={handleRotateRight}>Rotate Right</button>
     </div>
   );
 }
 
-export default Editor;
+export default ImageEditor;

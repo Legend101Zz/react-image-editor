@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Layouts/Navbar/Navbar.js";
 import ImageOverlay from "./image.jsx";
+import ImageEditor from "./index2.jsx";
 import { Button } from "@mui/material";
 import Editor from "./index.jsx"; // Import the Editor component
 import "./DesignSelection.css";
@@ -132,7 +133,11 @@ function DesignSelection() {
           </div>
         </div>
       </div>
-      <Editor image={selectedImage} />{" "}
+      <ImageEditor
+        mainImageSrc="t_hoodie.png" // Provide the path to your main image
+        overlayImageSrc={userDesign || "logo_e.png"} // Provide the path to your overlay image
+      />
+
       {/* Pass the selected image to the Editor */}
     </>
   );

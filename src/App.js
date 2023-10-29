@@ -17,6 +17,7 @@ import DesignerSignUp from "./components/Pages/DesignerSignup/DesignerSignup";
 ///===========================EDITOR-HERE=====================
 import Editor from "./components/Editor/index.jsx";
 import DesignSelection from "./components/Editor/start.jsx";
+import ImageEditor from "./components/Editor/index2.jsx";
 
 // import Homepage from "./components/Pages/HomePage/Homepage";
 function App() {
@@ -49,6 +50,8 @@ function App() {
         <Route path="/designerSignup" exact element={<DesignerSignUp />} />
         <Route path="/editor" exact element={<Editor />} />
         <Route path="/editor2" exact element={<DesignSelection />} />
+        <Route path="/editor3" exact element={<ImageEditor />} />
+
         {/* Add more routes as needed */}
       </Routes>
     </>
