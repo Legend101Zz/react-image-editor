@@ -6,6 +6,7 @@ import {
   faSearchMinus,
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "@mui/material";
 
 function ImageEditor({ mainImageSrc, overlayImageSrc }) {
   const canvasRef = useRef(null);
@@ -190,6 +191,29 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     link.click();
   };
 
+  //handle preview
+
+  const handlePreview = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the main image
+    ctx.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
+
+    const { x, y } = overlayPosition;
+    const width = overlayImage.width * overlayScale;
+    const height = overlayImage.height * overlayScale;
+
+    ctx.save();
+    ctx.translate(x + width / 2, y + height / 2);
+    ctx.rotate((rotationAngle * Math.PI) / 180);
+    ctx.drawImage(overlayImage, -width / 2, -height / 2, width, height);
+    ctx.restore();
+  };
+
   const scaleButtonSize = 30; // Set the size of scale buttons
 
   const renderScaleButtons = () => {
@@ -276,11 +300,35 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
           cursor: isDragging ? "grabbing" : isResizing ? "se-resize" : "grab",
         }}
       />
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#A24D50",
+          paddingLeft: "10%",
+          paddingRight: "10%",
+          borderRadius: "5px 0 0 5px",
+        }}
+        onClick={handleSave}
+      >
+        SAVE PRODUCT <br />
+        <FontAwesomeIcon icon={faSave} />
+      </Button>
+
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#A24D50",
+          paddingLeft: "10%",
+          paddingRight: "10%",
+          borderRadius: "5px 0 0 5px",
+        }}
+        onClick={handlePreview}
+      >
+        PREVIEW PRODUCT <br />
+        <FontAwesomeIcon icon={faSave} />
+      </Button>
 
       {renderScaleButtons()}
-      <button onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave} />
-      </button>
     </div>
   );
 }
