@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRedo,
-  faExpand,
-  faSearchMinus,
   faSearchPlus,
+  faSearchMinus,
+  faExpand,
 } from "@fortawesome/free-solid-svg-icons";
 
 function ImageEditor({ mainImageSrc, overlayImageSrc }) {
@@ -40,7 +40,6 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     ctx.restore();
 
     // Draw bounding box
-    //ctx.strokeStyle = "dotted";
     ctx.setLineDash([2, 3]);
     ctx.lineWidth = 2;
     ctx.strokeStyle = "red";
@@ -157,7 +156,7 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     const width = overlayImage.width * overlayScale;
     const height = overlayImage.height * overlayScale;
 
-    // Calculate button positions at the edges of the bounding box
+    // Calculate button positions at the corners of the bounding box
     const buttons = [
       { x: x - scaleButtonSize, y: y - scaleButtonSize },
       { x: x + width, y: y - scaleButtonSize },
@@ -165,24 +164,64 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
       { x: x + width, y: y + height },
     ];
 
-    return buttons.map((button, index) => (
-      <button
-        key={index}
-        onClick={() => handleScale(0.1 * (index < 2 ? 1 : -1), index < 2)}
-        style={{
-          position: "absolute",
-          top: button.y,
-          left: button.x,
-          width: scaleButtonSize,
-          height: scaleButtonSize,
-        }}
-      >
-        <FontAwesomeIcon
-          icon={index < 2 ? faSearchPlus : faSearchMinus}
-          style={{ fontSize: "24px" }}
-        />
-      </button>
-    ));
+    // Rotation buttons at the top-left and bottom-right corners
+    const rotationButtons = [
+      { x: x - scaleButtonSize, y: y - scaleButtonSize },
+      { x: x + width, y: y + height },
+    ];
+
+    return buttons
+      .map((button, index) => (
+        <button
+          key={index}
+          onClick={() => handleScale(0.1 * (index < 2 ? 1 : -1), index < 2)}
+          style={{
+            position: "absolute",
+            top: button.y,
+            left: button.x,
+            width: scaleButtonSize,
+            height: scaleButtonSize,
+            backgroundColor: "white",
+            border: "1px solid #ccc",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FontAwesomeIcon
+            icon={index < 2 ? faSearchPlus : faSearchMinus}
+            style={{ fontSize: "20px" }}
+          />
+        </button>
+      ))
+      .concat(
+        rotationButtons.map((button, index) => (
+          <button
+            key={index}
+            onClick={index === 0 ? handleRotateLeft : handleRotateRight}
+            style={{
+              position: "absolute",
+              top: button.y,
+              left: button.x,
+              width: scaleButtonSize,
+              height: scaleButtonSize,
+              backgroundColor: "white",
+              border: "1px solid #ccc",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <FontAwesomeIcon
+              icon={index === 0 ? faRedo : faRedo}
+              style={{
+                fontSize: "20px",
+                transform: index === 0 ? "none" : "rotate(180deg)",
+              }}
+            />
+          </button>
+        ))
+      );
   };
 
   return (
@@ -196,14 +235,7 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
           cursor: isDragging ? "grabbing" : isResizing ? "se-resize" : "grab",
         }}
       />
-      {/* Rotate Left Icon */}
-      <button onClick={handleRotateLeft}>
-        <FontAwesomeIcon icon={faRedo} />
-      </button>
-      {/* Rotate Right Icon */}
-      <button onClick={handleRotateRight}>
-        <FontAwesomeIcon icon={faRedo} flip="horizontal" />
-      </button>
+
       {renderScaleButtons()}
     </div>
   );
