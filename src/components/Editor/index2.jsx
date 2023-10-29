@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRedo, faExpand } from "@fortawesome/free-solid-svg-icons";
+import {
+  faRedo,
+  faExpand,
+  faSearchMinus,
+  faSearchPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 function ImageEditor({ mainImageSrc, overlayImageSrc }) {
   const canvasRef = useRef(null);
@@ -145,6 +150,41 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     drawImages();
   };
 
+  const scaleButtonSize = 30; // Set the size of scale buttons
+
+  const renderScaleButtons = () => {
+    const { x, y } = overlayPosition;
+    const width = overlayImage.width * overlayScale;
+    const height = overlayImage.height * overlayScale;
+
+    // Calculate button positions at the edges of the bounding box
+    const buttons = [
+      { x: x - scaleButtonSize, y: y - scaleButtonSize },
+      { x: x + width, y: y - scaleButtonSize },
+      { x: x - scaleButtonSize, y: y + height },
+      { x: x + width, y: y + height },
+    ];
+
+    return buttons.map((button, index) => (
+      <button
+        key={index}
+        onClick={() => handleScale(0.1 * (index < 2 ? 1 : -1), index < 2)}
+        style={{
+          position: "absolute",
+          top: button.y,
+          left: button.x,
+          width: scaleButtonSize,
+          height: scaleButtonSize,
+        }}
+      >
+        <FontAwesomeIcon
+          icon={index < 2 ? faSearchPlus : faSearchMinus}
+          style={{ fontSize: "24px" }}
+        />
+      </button>
+    ));
+  };
+
   return (
     <div style={{ position: "relative" }}>
       <canvas
@@ -164,10 +204,7 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
       <button onClick={handleRotateRight}>
         <FontAwesomeIcon icon={faRedo} flip="horizontal" />
       </button>
-      {/* Scale Icon */}
-      <button onClick={handleScale}>
-        <FontAwesomeIcon icon={faExpand} />
-      </button>
+      {renderScaleButtons()}
     </div>
   );
 }
