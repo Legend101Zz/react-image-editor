@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedo, faExpand } from "@fortawesome/free-solid-svg-icons";
 
 function ImageEditor({ mainImageSrc, overlayImageSrc }) {
   const canvasRef = useRef(null);
@@ -123,6 +125,14 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     setIsResizing(false);
   };
 
+  const handleScale = (scaleFactor) => {
+    const newScale = overlayScale + scaleFactor;
+    if (newScale > 0.1) {
+      setOverlayScale(newScale);
+      drawImages();
+    }
+  };
+
   const handleRotateLeft = () => {
     // Rotate the overlay image left (counter-clockwise)
     setRotationAngle(rotationAngle - 90);
@@ -146,8 +156,18 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
           cursor: isDragging ? "grabbing" : isResizing ? "se-resize" : "grab",
         }}
       />
-      <button onClick={handleRotateLeft}>Rotate Left</button>
-      <button onClick={handleRotateRight}>Rotate Right</button>
+      {/* Rotate Left Icon */}
+      <button onClick={handleRotateLeft}>
+        <FontAwesomeIcon icon={faRedo} />
+      </button>
+      {/* Rotate Right Icon */}
+      <button onClick={handleRotateRight}>
+        <FontAwesomeIcon icon={faRedo} flip="horizontal" />
+      </button>
+      {/* Scale Icon */}
+      <button onClick={handleScale}>
+        <FontAwesomeIcon icon={faExpand} />
+      </button>
     </div>
   );
 }
