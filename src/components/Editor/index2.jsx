@@ -31,6 +31,18 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     ctx.rotate((rotationAngle * Math.PI) / 180);
     ctx.drawImage(overlayImage, -width / 2, -height / 2, width, height);
     ctx.restore();
+
+    // Draw bounding box
+    ctx.strokeStyle = "dotted";
+    ctx.lineWidth = 2;
+    const boundingBoxWidth = overlayImage.width * overlayScale;
+    const boundingBoxHeight = overlayImage.height * overlayScale;
+    ctx.strokeRect(
+      x - boundingBoxWidth / 2,
+      y - boundingBoxHeight / 2,
+      boundingBoxWidth,
+      boundingBoxHeight
+    );
   }, [mainImage, overlayImage, overlayPosition, overlayScale, rotationAngle]);
 
   useEffect(() => {
@@ -63,9 +75,9 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
 
     if (
       offsetX >= overlayPosition.x &&
-      offsetX <= overlayPosition.x + overlayImageSrc.width * overlayScale &&
+      offsetX <= overlayPosition.x + overlayImage.width * overlayScale &&
       offsetY >= overlayPosition.y &&
-      offsetY <= overlayPosition.y + overlayImageSrc.height * overlayScale
+      offsetY <= overlayPosition.y + overlayImage.height * overlayScale
     ) {
       // Clicked inside the overlayed image, enable dragging
       setIsDragging(true);
@@ -91,13 +103,7 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
       });
 
       setDragStart({ x: e.clientX, y: e.clientY });
-      drawImages(
-        mainImageSrc,
-        overlayImageSrc,
-        overlayPosition,
-        overlayScale,
-        rotationAngle
-      );
+      drawImages();
     } else if (isResizing) {
       const dx = e.clientX - resizeStart.x;
       const dy = e.clientY - resizeStart.y;
@@ -111,13 +117,7 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
       }
 
       setResizeStart({ x: e.clientX, y: e.clientY });
-      drawImages(
-        mainImageSrc,
-        overlayImageSrc,
-        overlayPosition,
-        overlayScale,
-        rotationAngle
-      );
+      drawImages();
     }
   };
 
@@ -129,29 +129,17 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
   const handleRotateLeft = () => {
     // Rotate the overlay image left (counter-clockwise)
     setRotationAngle(rotationAngle - 90);
-    drawImages(
-      mainImageSrc,
-      overlayImageSrc,
-      overlayPosition,
-      overlayScale,
-      rotationAngle
-    );
+    drawImages();
   };
 
   const handleRotateRight = () => {
     // Rotate the overlay image right (clockwise)
     setRotationAngle(rotationAngle + 90);
-    drawImages(
-      mainImageSrc,
-      overlayImageSrc,
-      overlayPosition,
-      overlayScale,
-      rotationAngle
-    );
+    drawImages();
   };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <canvas
         ref={canvasRef}
         onMouseDown={handleMouseDown}
