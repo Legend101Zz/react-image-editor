@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 
 function ImageEditor({ mainImageSrc, overlayImageSrc }) {
   const canvasRef = useRef(null);
-  const [overlayPosition, setOverlayPosition] = useState({ x: 100, y: 100 });
-  const [overlayScale, setOverlayScale] = useState(1);
+  const [overlayPosition, setOverlayPosition] = useState({ x: 80, y: 50 });
+  const [overlayScale, setOverlayScale] = useState(0.5);
   const [rotationAngle, setRotationAngle] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -33,16 +33,13 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     ctx.restore();
 
     // Draw bounding box
-    ctx.strokeStyle = "dotted";
+    //ctx.strokeStyle = "dotted";
+    ctx.setLineDash([2, 3]);
     ctx.lineWidth = 2;
+    ctx.strokeStyle = "red";
     const boundingBoxWidth = overlayImage.width * overlayScale;
     const boundingBoxHeight = overlayImage.height * overlayScale;
-    ctx.strokeRect(
-      x - boundingBoxWidth / 2,
-      y - boundingBoxHeight / 2,
-      boundingBoxWidth,
-      boundingBoxHeight
-    );
+    ctx.strokeRect(x, y, boundingBoxWidth, boundingBoxHeight);
   }, [mainImage, overlayImage, overlayPosition, overlayScale, rotationAngle]);
 
   useEffect(() => {
