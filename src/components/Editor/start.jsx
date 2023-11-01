@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import Navbar from "../Layouts/Navbar/Navbar.js";
+import { Link, useHistory } from "react-router-dom";
 import ImageOverlay from "./image.jsx";
-import ImageEditor from "./index2.jsx";
 import { Button } from "@mui/material";
-import Editor from "./index.jsx"; // Import the Editor component
 import "./DesignSelection.css";
 
 function DesignSelection() {
   const [userDesign, setUserDesign] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const history = useHistory();
 
   const handleDesignChange = (e) => {
     // Handle the user's design upload and set it to the state
@@ -25,6 +25,11 @@ function DesignSelection() {
   // Function to set the selected image when the "Edit" button is clicked
   const handleEditImage = (imageData) => {
     setSelectedImage(imageData);
+    history.push(
+      `/image-editor?mainImage=${encodeURIComponent(
+        "t_hoodie.png"
+      )}&overlayImage=${encodeURIComponent(userDesign || "logo_e.png")}`
+    );
   };
 
   return (
@@ -133,10 +138,6 @@ function DesignSelection() {
           </div>
         </div>
       </div>
-      <ImageEditor
-        mainImageSrc="t_hoodie.png" // Provide the path to your main image
-        overlayImageSrc={userDesign || "logo_e.png"} // Provide the path to your overlay image
-      />
 
       {/* Pass the selected image to the Editor */}
     </>
