@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import Navbar from "../Layouts/Navbar/Navbar.js";
-import { Link, useHistory } from "react-router-dom";
 import ImageOverlay from "./image.jsx";
 import { Button } from "@mui/material";
 import "./DesignSelection.css";
@@ -8,7 +8,7 @@ import "./DesignSelection.css";
 function DesignSelection() {
   const [userDesign, setUserDesign] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleDesignChange = (e) => {
     // Handle the user's design upload and set it to the state
@@ -25,7 +25,7 @@ function DesignSelection() {
   // Function to set the selected image when the "Edit" button is clicked
   const handleEditImage = (imageData) => {
     setSelectedImage(imageData);
-    history.push(
+    navigate(
       `/image-editor?mainImage=${encodeURIComponent(
         "t_hoodie.png"
       )}&overlayImage=${encodeURIComponent(userDesign || "logo_e.png")}`
