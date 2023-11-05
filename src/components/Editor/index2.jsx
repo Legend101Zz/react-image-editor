@@ -171,6 +171,9 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     snapshot.height = canvas.height;
     const ctx = snapshot.getContext("2d");
     ctx.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
+    // Reset blending mode and opacity
+    // ctx.globalCompositeOperation = "source-over";
+    // ctx.globalAlpha = 0.8;
     ctx.save();
     ctx.translate(
       overlayPosition.x + (overlayImage.width * overlayScale) / 2,
@@ -210,11 +213,15 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     const { x, y } = overlayPosition;
     const width = overlayImage.width * overlayScale;
     const height = overlayImage.height * overlayScale;
+    // Reset blending mode and opacity
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 0.8;
 
     ctx.save();
     ctx.translate(x + width / 2, y + height / 2);
     ctx.rotate((rotationAngle * Math.PI) / 180);
     ctx.drawImage(overlayImage, -width / 2, -height / 2, width, height);
+
     ctx.restore();
   };
 
