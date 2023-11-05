@@ -11,7 +11,7 @@ function ImageEditorPage() {
   const overlayImageSrc = searchParams.get("overlayImage");
 
   // Sample list of images to choose from
-  const imageList = ["hod1.png", "hod2.png", "t_hoodie.png"];
+  const imageList = ["hod1.png", "hod2.png", "t_hoodie.pngcd "];
 
   // State to store the selected main image
   const [selectedMainImage, setSelectedMainImage] = useState(mainImageSrc);
