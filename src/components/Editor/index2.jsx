@@ -172,8 +172,8 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
     const ctx = snapshot.getContext("2d");
     ctx.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
     // Reset blending mode and opacity
-    // ctx.globalCompositeOperation = "source-over";
-    // ctx.globalAlpha = 0.8;
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 0.8;
     ctx.save();
     ctx.translate(
       overlayPosition.x + (overlayImage.width * overlayScale) / 2,
