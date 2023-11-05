@@ -140,7 +140,23 @@ function ImageEditor({ mainImageSrc, overlayImageSrc }) {
   const handleScale = (scaleFactor) => {
     const newScale = overlayScale + scaleFactor;
     if (newScale > 0.1) {
+      // Calculate the new width and height while maintaining the aspect ratio
+      const originalWidth = overlayImage.width;
+      const originalHeight = overlayImage.height;
+      const newWidth = originalWidth * newScale;
+      const newHeight = originalHeight * (newWidth / originalWidth);
       setOverlayScale(newScale);
+      setOverlayPosition((prevPosition) => {
+        // Adjust the position to keep the center of the overlay image in place
+        const deltaX = (newWidth - prevPosition.width) / 2;
+        const deltaY = (newHeight - prevPosition.height) / 2;
+        return {
+          x: prevPosition.x - deltaX,
+          y: prevPosition.y - deltaY,
+          width: newWidth,
+          height: newHeight,
+        };
+      });
       drawImages();
     }
   };
